@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A4A75072AFAEDD300E6DD71 /* TeamDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A75062AFAEDD300E6DD71 /* TeamDetailViewController.swift */; };
+		1A4A750E2AFD17E700E6DD71 /* DataPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A750D2AFD17E700E6DD71 /* DataPersistenceManager.swift */; };
 		1A52414F2AF5A9F300167F22 /* YouTubeSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A52414E2AF5A9F300167F22 /* YouTubeSearchResponse.swift */; };
 		1A5241512AF5ACA900167F22 /* CircuitPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5241502AF5ACA900167F22 /* CircuitPreviewViewController.swift */; };
 		1A5241542AF5BC3C00167F22 /* CircuitPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5241532AF5BC3C00167F22 /* CircuitPreviewViewModel.swift */; };
@@ -20,6 +22,8 @@
 		1A7B7BAF2AEF309A0015117A /* CircuitsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7B7BAE2AEF309A0015117A /* CircuitsCollectionViewCell.swift */; };
 		1A87C74E2AEBF07100CF1FB1 /* VideoHeaderUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A87C74D2AEBF07100CF1FB1 /* VideoHeaderUIView.swift */; };
 		1A87C7612AEC7B6200CF1FB1 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A87C7602AEC7B6200CF1FB1 /* HomeTableViewCell.swift */; };
+		1A8A48F62AF985D1002A578E /* DriverDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A48F52AF985D1002A578E /* DriverDetailViewController.swift */; };
+		1A8A48F82AF98664002A578E /* DriverDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A48F72AF98664002A578E /* DriverDetailViewModel.swift */; };
 		1AEA6C882AE9CD9A001CBF81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA6C872AE9CD9A001CBF81 /* AppDelegate.swift */; };
 		1AEA6C8A2AE9CD9A001CBF81 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA6C892AE9CD9A001CBF81 /* SceneDelegate.swift */; };
 		1AEA6C8C2AE9CD9A001CBF81 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA6C8B2AE9CD9A001CBF81 /* MainTabBarViewController.swift */; };
@@ -37,6 +41,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A4A75062AFAEDD300E6DD71 /* TeamDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamDetailViewController.swift; sourceTree = "<group>"; };
+		1A4A750D2AFD17E700E6DD71 /* DataPersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPersistenceManager.swift; sourceTree = "<group>"; };
 		1A52414E2AF5A9F300167F22 /* YouTubeSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeSearchResponse.swift; sourceTree = "<group>"; };
 		1A5241502AF5ACA900167F22 /* CircuitPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircuitPreviewViewController.swift; sourceTree = "<group>"; };
 		1A5241532AF5BC3C00167F22 /* CircuitPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircuitPreviewViewModel.swift; sourceTree = "<group>"; };
@@ -50,6 +56,8 @@
 		1A7B7BAE2AEF309A0015117A /* CircuitsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircuitsCollectionViewCell.swift; sourceTree = "<group>"; };
 		1A87C74D2AEBF07100CF1FB1 /* VideoHeaderUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHeaderUIView.swift; sourceTree = "<group>"; };
 		1A87C7602AEC7B6200CF1FB1 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		1A8A48F52AF985D1002A578E /* DriverDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverDetailViewController.swift; sourceTree = "<group>"; };
+		1A8A48F72AF98664002A578E /* DriverDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverDetailViewModel.swift; sourceTree = "<group>"; };
 		1AEA6C842AE9CD9A001CBF81 /* F1 Explorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "F1 Explorer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AEA6C872AE9CD9A001CBF81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1AEA6C892AE9CD9A001CBF81 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				1A5241532AF5BC3C00167F22 /* CircuitPreviewViewModel.swift */,
+				1A8A48F72AF98664002A578E /* DriverDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -97,6 +106,29 @@
 				1A54F4682AF2D2AB00CC7844 /* DriverTableViewCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		1A8A48F32AF9859F002A578E /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				1AEA6C8B2AE9CD9A001CBF81 /* MainTabBarViewController.swift */,
+				1AEA6CA02AE9CFD3001CBF81 /* HomeViewController.swift */,
+				1AEA6CA22AE9CFE3001CBF81 /* DriversSearchViewController.swift */,
+				1AEA6CA42AE9CFFA001CBF81 /* TeamsViewController.swift */,
+				1AEA6CA62AE9D006001CBF81 /* SavesViewController.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		1A8A48F42AF985A5002A578E /* General */ = {
+			isa = PBXGroup;
+			children = (
+				1A54F4642AF29AB600CC7844 /* DriversSearchResultViewController.swift */,
+				1A5241502AF5ACA900167F22 /* CircuitPreviewViewController.swift */,
+				1A8A48F52AF985D1002A578E /* DriverDetailViewController.swift */,
+				1A4A75062AFAEDD300E6DD71 /* TeamDetailViewController.swift */,
+			);
+			path = General;
 			sourceTree = "<group>";
 		};
 		1AEA6C7B2AE9CD9A001CBF81 = {
@@ -145,13 +177,8 @@
 		1AEA6C9F2AE9CDF4001CBF81 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				1AEA6C8B2AE9CD9A001CBF81 /* MainTabBarViewController.swift */,
-				1AEA6CA02AE9CFD3001CBF81 /* HomeViewController.swift */,
-				1AEA6CA22AE9CFE3001CBF81 /* DriversSearchViewController.swift */,
-				1A54F4642AF29AB600CC7844 /* DriversSearchResultViewController.swift */,
-				1AEA6CA42AE9CFFA001CBF81 /* TeamsViewController.swift */,
-				1AEA6CA62AE9D006001CBF81 /* SavesViewController.swift */,
-				1A5241502AF5ACA900167F22 /* CircuitPreviewViewController.swift */,
+				1A8A48F32AF9859F002A578E /* Core */,
+				1A8A48F42AF985A5002A578E /* General */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -160,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				1AEA6CA92AE9D4B0001CBF81 /* APICaller.swift */,
+				1A4A750D2AFD17E700E6DD71 /* DataPersistenceManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -259,15 +287,19 @@
 				1AEA6CAD2AE9D580001CBF81 /* Status.swift in Sources */,
 				1AEA6C8C2AE9CD9A001CBF81 /* MainTabBarViewController.swift in Sources */,
 				1A7B7BAA2AEF26EC0015117A /* Circuit.swift in Sources */,
+				1A4A75072AFAEDD300E6DD71 /* TeamDetailViewController.swift in Sources */,
 				1AEA6C882AE9CD9A001CBF81 /* AppDelegate.swift in Sources */,
 				1A5241512AF5ACA900167F22 /* CircuitPreviewViewController.swift in Sources */,
 				1A54F4672AF2A00100CC7844 /* Driver.swift in Sources */,
 				1AEA6C8A2AE9CD9A001CBF81 /* SceneDelegate.swift in Sources */,
+				1A8A48F62AF985D1002A578E /* DriverDetailViewController.swift in Sources */,
 				1A87C74E2AEBF07100CF1FB1 /* VideoHeaderUIView.swift in Sources */,
 				1A54F4652AF29AB600CC7844 /* DriversSearchResultViewController.swift in Sources */,
 				1A87C7612AEC7B6200CF1FB1 /* HomeTableViewCell.swift in Sources */,
+				1A8A48F82AF98664002A578E /* DriverDetailViewModel.swift in Sources */,
 				1AEA6CAA2AE9D4B0001CBF81 /* APICaller.swift in Sources */,
 				1AEA6CA32AE9CFE3001CBF81 /* DriversSearchViewController.swift in Sources */,
+				1A4A750E2AFD17E700E6DD71 /* DataPersistenceManager.swift in Sources */,
 				1AEA6CA72AE9D006001CBF81 /* SavesViewController.swift in Sources */,
 				1A54F4692AF2D2AB00CC7844 /* DriverTableViewCell.swift in Sources */,
 				1A709C6D2AF0A463001FDBA3 /* Team.swift in Sources */,

@@ -54,7 +54,7 @@ class CircuitPreviewViewController: UIViewController {
         divider.translatesAutoresizingMaskIntoConstraints = false
         return divider
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -92,22 +92,21 @@ class CircuitPreviewViewController: UIViewController {
         ]
         let lenghtLabelConstraints = [
             lenghtLabel.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 7),
-
             lenghtLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
         ]
         let dividerConstraints = [
-                dividerView.topAnchor.constraint(equalTo: sinceLabel.bottomAnchor, constant: 7),
-                dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-                dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-                dividerView.heightAnchor.constraint(equalToConstant: 1)
-            ]
+            dividerView.topAnchor.constraint(equalTo: sinceLabel.bottomAnchor, constant: 7),
+            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            dividerView.heightAnchor.constraint(equalToConstant: 1)
+        ]
         NSLayoutConstraint.activate(webViewConstraints)
         NSLayoutConstraint.activate(nameLabelConstraints)
         NSLayoutConstraint.activate(locationLabelConstraints)
         NSLayoutConstraint.activate(sinceLabelConstraints)
         NSLayoutConstraint.activate(lenghtLabelConstraints)
         NSLayoutConstraint.activate(dividerConstraints)
-
+        
     }
     
     public func configure(with model: CircuitPreviewViewModel) {

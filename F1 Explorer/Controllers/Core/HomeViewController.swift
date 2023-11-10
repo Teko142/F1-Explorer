@@ -35,7 +35,7 @@ class HomeViewController: UIViewController {
         
         let headerView = VideoHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 200))
         homeCircuitcTable.tableHeaderView = headerView
-        }
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -129,7 +129,5 @@ extension HomeViewController: HomeTableViewCellDelegate {
             vc.configure(with: viewModel)
             self?.navigationController?.pushViewController(vc, animated: true)
         }
-        
-        
     }
 }

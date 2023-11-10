@@ -18,7 +18,7 @@ struct Driver: Codable {
     let country: Country?
     let birthdate: String?
     let number: Int?
-    let worldChampionships: Int?
+    let world_championships: Int?
     let podiums: Int?
     let careerPoints: String?
     let teams: [DriverTeams]?

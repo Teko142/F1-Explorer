@@ -72,4 +72,11 @@ extension TeamsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let team = teams[indexPath.row]
+        let vc = TeamDetailViewController()
+        vc.configure(logo: team.logo ?? "", name: team.name ?? "Unknown Team", location: team.base ?? "Unknown base", president: team.president ?? "Unkown President", firstEntry: team.first_team_entry ?? 0, championships: team.world_championships ?? 0, position: team.highest_race_finish?.position ?? 0)
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
