@@ -14,6 +14,25 @@ class DriverDetailViewController: UIViewController {
     var savedDrivers: [DriverItem] = [DriverItem]()
     var existInDTB: Bool = false
     
+    let imageUIViewConteiner = UIView()
+    let driverInfoUIViewConteiner = UIView()
+    let teamUIViewConteiner = UIView()
+    let competitionsUIViewConteiner = UIView()
+    
+    private let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let scrollStackViewContainer: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 0
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let driverUIImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -110,55 +129,93 @@ class DriverDetailViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-
+        
         fetchLocalStorageForSaves()
-
+        
         let saveButton = UIBarButtonItem(title: existInDTB ? "Delete" : "Save", style: .done, target: self, action: #selector(saveAndDelete))
         self.navigationItem.rightBarButtonItem = saveButton
         
-        view.addSubview(driverUIImageView)
-        view.addSubview(numberLabel)
-        view.addSubview(nameLabel)
-        view.addSubview(locationLabel)
-        view.addSubview(birthLabel)
-        view.addSubview(teamUIImageView)
-        view.addSubview(teamNameLabel)
-        view.addSubview(championshipLabel)
-        view.addSubview(podiumLabel)
-        view.addSubview(dividerView)
-        view.addSubview(dividerView2)
+        view.addSubview(scrollView)
+        scrollView.addSubview(scrollStackViewContainer)
         
-        applyConstrains()
+        scrollStackViewContainer.addArrangedSubview(imageUIViewConteiner)
+        scrollStackViewContainer.addArrangedSubview(driverInfoUIViewConteiner)
+        scrollStackViewContainer.addArrangedSubview(teamUIViewConteiner)
+        scrollStackViewContainer.addArrangedSubview(competitionsUIViewConteiner)
         
+        imageUIViewConteiner.addSubview(driverUIImageView)
+        imageUIViewConteiner.addSubview(numberLabel)
+        
+        driverInfoUIViewConteiner.addSubview(nameLabel)
+        driverInfoUIViewConteiner.addSubview(locationLabel)
+        driverInfoUIViewConteiner.addSubview(birthLabel)
+        driverInfoUIViewConteiner.addSubview(dividerView)
+        
+        teamUIViewConteiner.addSubview(teamUIImageView)
+        teamUIViewConteiner.addSubview(teamNameLabel)
+        teamUIViewConteiner.addSubview(dividerView2)
+        
+        competitionsUIViewConteiner.addSubview(championshipLabel)
+        competitionsUIViewConteiner.addSubview(podiumLabel)
+        
+        applyConstraints()
     }
     
-    
-    private func applyConstrains() {
+    private func applyConstraints() {
+        let scrollViewConstraits = [
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
+        let scrollStackViewContainerConstraints = [
+            scrollStackViewContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollStackViewContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollStackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollStackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollStackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ]
+        // MARK: - Conteiners
+        let imageUIViewConteinerConstraints = [
+            imageUIViewConteiner.heightAnchor.constraint(equalToConstant: 400)
+        ]
+        let driverInfoUIViewConteinerConstraints = [
+            driverInfoUIViewConteiner.heightAnchor.constraint(equalToConstant: 100)
+        ]
+        let teamUIViewConteinerConstraints = [
+            teamUIViewConteiner.heightAnchor.constraint(equalToConstant: 100)
+        ]
+        let competitionsUIViewConteinerConstraints = [
+            competitionsUIViewConteiner.heightAnchor.constraint(equalToConstant: 50)
+        ]
+        // MARK: - UIElements
         let driverUIImageViewConstraints = [
-            driverUIImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            driverUIImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            driverUIImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            driverUIImageView.heightAnchor.constraint(equalToConstant: 350)
+            driverUIImageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            driverUIImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            driverUIImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            driverUIImageView.heightAnchor.constraint(equalToConstant: 400),
+            driverUIImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ]
         let numberLabelConstraints = [
             numberLabel.topAnchor.constraint(equalTo: driverUIImageView.topAnchor, constant: 15),
-            numberLabel.trailingAnchor.constraint(equalTo: driverUIImageView.trailingAnchor, constant: -15)
+            numberLabel.trailingAnchor.constraint(equalTo: driverUIImageView.trailingAnchor, constant: -30),
         ]
+        
         let nameLabelConstraints = [
-            nameLabel.topAnchor.constraint(equalTo: driverUIImageView.bottomAnchor, constant: 15),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            nameLabel.topAnchor.constraint(equalTo: imageUIViewConteiner.bottomAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
         ]
         let locationLabelConstraints = [
             locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            locationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            locationLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let birthLabelConstraints = [
             birthLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 10),
-            birthLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            birthLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let teamUIImageViewConstraints = [
             teamUIImageView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 7),
-            teamUIImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            teamUIImageView.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             teamUIImageView.heightAnchor.constraint(equalToConstant: 50),
             teamUIImageView.widthAnchor.constraint(equalToConstant: 120)
         ]
@@ -168,24 +225,34 @@ class DriverDetailViewController: UIViewController {
         ]
         let championshipLabelConstraints = [
             championshipLabel.topAnchor.constraint(equalTo: dividerView2.bottomAnchor, constant: 7),
-            championshipLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            championshipLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let podiumLabelConstraints = [
             podiumLabel.topAnchor.constraint(equalTo: championshipLabel.bottomAnchor, constant: 10),
-            podiumLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            podiumLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
+        // MARK: - Dividers
         let dividerViewConstraints = [
             dividerView.topAnchor.constraint(equalTo: birthLabel.bottomAnchor, constant: 7),
-            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            dividerView.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            dividerView.trailingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             dividerView.heightAnchor.constraint(equalToConstant: 1)
         ]
         let dividerView2Constraints = [
             dividerView2.topAnchor.constraint(equalTo: teamUIImageView.bottomAnchor, constant: 7),
-            dividerView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            dividerView2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            dividerView2.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            dividerView2.trailingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             dividerView2.heightAnchor.constraint(equalToConstant: 1)
         ]
+        
+        NSLayoutConstraint.activate(scrollViewConstraits)
+        NSLayoutConstraint.activate(scrollStackViewContainerConstraints)
+        
+        NSLayoutConstraint.activate(imageUIViewConteinerConstraints)
+        NSLayoutConstraint.activate(driverInfoUIViewConteinerConstraints)
+        NSLayoutConstraint.activate(teamUIViewConteinerConstraints)
+        NSLayoutConstraint.activate(competitionsUIViewConteinerConstraints)
+        
         NSLayoutConstraint.activate(driverUIImageViewConstraints)
         NSLayoutConstraint.activate(numberLabelConstraints)
         NSLayoutConstraint.activate(nameLabelConstraints)
@@ -195,6 +262,7 @@ class DriverDetailViewController: UIViewController {
         NSLayoutConstraint.activate(teamNameLabelConstraints)
         NSLayoutConstraint.activate(championshipLabelConstraints)
         NSLayoutConstraint.activate(podiumLabelConstraints)
+        
         NSLayoutConstraint.activate(dividerViewConstraints)
         NSLayoutConstraint.activate(dividerView2Constraints)
     }
@@ -224,7 +292,12 @@ class DriverDetailViewController: UIViewController {
         updateSaveButtonTitle()
     }
     
-     func saveDriver() {
+    func updateSaveButtonTitle() {
+        let saveButtonTitle = existInDTB ? "Delete" : "Save"
+        self.navigationItem.rightBarButtonItem?.title = saveButtonTitle
+    }
+    // MARK: - Operations With CoreData
+    func saveDriver() {
         DataPersistenceManager.shared.saveDriverWith(model: driver!) { result in
             switch result {
             case .success():
@@ -263,10 +336,4 @@ class DriverDetailViewController: UIViewController {
             self?.existInDTB = false
         }
     }
-    
-    func updateSaveButtonTitle() {
-        let saveButtonTitle = existInDTB ? "Delete" : "Save"
-        self.navigationItem.rightBarButtonItem?.title = saveButtonTitle
-    }
-
 }
