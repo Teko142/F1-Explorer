@@ -9,7 +9,7 @@ import Foundation
 
 struct Constants {
     static let API_KEY = "371648ddf66da22b1395ba5151d75cff"
-    static let baseURL = "https://api-formula-1.p.rapidapi.com"
+    static let baseURL = "https://v1.formula-1.api-sports.io"
     static let YouTubeAPI_KEY = "AIzaSyB6yW_gpKPrQQDhO5GLTdSxBWTgwop4TIo"
     static let YouTubeBaseURL = "https://youtube.googleapis.com/youtube/v3/search?"
 }
@@ -23,10 +23,10 @@ class APICaller {
     static let shared = APICaller()
     
     func getStatus(completion: @escaping (Result<Status, Error>) -> Void) {
-        guard let url = URL(string: "https://v1.formula-1.api-sports.io/status") else { return }
+        guard let url = URL(string: "\(Constants.baseURL)/status") else { return }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
         request.httpMethod = "GET"
-        request.addValue("371648ddf66da22b1395ba5151d75cff", forHTTPHeaderField: "x-rapidapi-key")
+        request.addValue(Constants.API_KEY, forHTTPHeaderField: "x-rapidapi-key")
         request.addValue("v1.formula-1.api-sports.io", forHTTPHeaderField: "x-rapidapi-host")
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data = data, error == nil else { return }
@@ -41,10 +41,10 @@ class APICaller {
     }
     
     func getCircuits(completion: @escaping (Result<[Circuits], Error>) -> Void) {
-        guard let url = URL(string: "https://v1.formula-1.api-sports.io/circuits") else { return }
+        guard let url = URL(string: "\(Constants.baseURL)/circuits") else { return }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
         request.httpMethod = "GET"
-        request.addValue("371648ddf66da22b1395ba5151d75cff", forHTTPHeaderField: "x-rapidapi-key")
+        request.addValue(Constants.API_KEY, forHTTPHeaderField: "x-rapidapi-key")
         request.addValue("v1.formula-1.api-sports.io", forHTTPHeaderField: "x-rapidapi-host")
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data = data, error == nil else { return }
@@ -59,10 +59,10 @@ class APICaller {
     }
     
     func getTeams(completion: @escaping (Result<[Team], Error>) -> Void) {
-        guard let url = URL(string: "https://v1.formula-1.api-sports.io/teams") else { return }
+        guard let url = URL(string: "\(Constants.baseURL)/teams") else { return }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
         request.httpMethod = "GET"
-        request.addValue("371648ddf66da22b1395ba5151d75cff", forHTTPHeaderField: "x-rapidapi-key")
+        request.addValue(Constants.API_KEY, forHTTPHeaderField: "x-rapidapi-key")
         request.addValue("v1.formula-1.api-sports.io", forHTTPHeaderField: "x-rapidapi-host")
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data = data, error == nil else { return }
@@ -78,10 +78,10 @@ class APICaller {
     
     func searchDrivers(with query: String, completion: @escaping (Result<[Driver], Error>) -> Void) {
         guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
-        guard let url = URL(string: "https://v1.formula-1.api-sports.io/drivers?search=\(query)") else { return }
+        guard let url = URL(string: "\(Constants.baseURL)/drivers?search=\(query)") else { return }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
         request.httpMethod = "GET"
-        request.addValue("371648ddf66da22b1395ba5151d75cff", forHTTPHeaderField: "x-rapidapi-key")
+        request.addValue(Constants.API_KEY, forHTTPHeaderField: "x-rapidapi-key")
         request.addValue("v1.formula-1.api-sports.io", forHTTPHeaderField: "x-rapidapi-host")
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data = data, error == nil else { return }

@@ -9,6 +9,8 @@ import UIKit
 
 class TeamsViewController: UIViewController {
     
+    let activityView = UIActivityIndicatorView(style: .large)
+    
     private var teams: [Team] = [Team]()
     
     private let teamsTable: UITableView = {
@@ -16,7 +18,7 @@ class TeamsViewController: UIViewController {
         table.register(TeamTableViewCell.self, forCellReuseIdentifier: TeamTableViewCell.identifier)
         return table
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,6 +59,13 @@ class TeamsViewController: UIViewController {
 extension TeamsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch teams.isEmpty {
+        case true:
+            showActivityIndicatory()
+        case false:
+            hideActivityIndicator()
+        }
+        
         return teams.count
     }
     
@@ -78,5 +87,15 @@ extension TeamsViewController: UITableViewDelegate, UITableViewDataSource {
         let vc = TeamDetailViewController()
         vc.configure(logo: team.logo ?? "", name: team.name ?? "Unknown Team", location: team.base ?? "Unknown base", president: team.president ?? "Unkown President", firstEntry: team.first_team_entry ?? 0, championships: team.world_championships ?? 0, position: team.highest_race_finish?.position ?? 0)
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func showActivityIndicatory() {
+        activityView.center = self.view.center
+        self.view.addSubview(activityView)
+        activityView.startAnimating()
+    }
+    
+    func hideActivityIndicator(){
+        activityView.stopAnimating()
     }
 }

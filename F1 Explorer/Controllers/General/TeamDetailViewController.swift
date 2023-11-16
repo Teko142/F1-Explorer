@@ -9,6 +9,24 @@ import UIKit
 import SDWebImage
 
 class TeamDetailViewController: UIViewController {
+    
+    let imageUIViewConteiner = UIView()
+    let teamInfoUIViewConteniner = UIView()
+    let competitionsUIViewConteiner = UIView()
+    
+    private let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let scrollStackViewContainer: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 0
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     private let logoUIImageView: UIImageView = {
         let imageView = UIImageView()
@@ -79,48 +97,90 @@ class TeamDetailViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = .label
 
         
-        view.addSubview(logoUIImageView)
-        view.addSubview(nameLabel)
-        view.addSubview(locationLabel)
-        view.addSubview(presidentLabel)
-        view.addSubview(firstEntryLabel)
-        view.addSubview(championshipLabel)
-        view.addSubview(bestPosLabel)
+        view.addSubview(scrollView)
+        scrollView.addSubview(scrollStackViewContainer)
+        
+        scrollStackViewContainer.addArrangedSubview(imageUIViewConteiner)
+        scrollStackViewContainer.addArrangedSubview(teamInfoUIViewConteniner)
+        scrollStackViewContainer.addArrangedSubview(competitionsUIViewConteiner)
+        
+        imageUIViewConteiner.addSubview(logoUIImageView)
+        
+        teamInfoUIViewConteniner.addSubview(nameLabel)
+        teamInfoUIViewConteniner.addSubview(locationLabel)
+        teamInfoUIViewConteniner.addSubview(presidentLabel)
+        
+        competitionsUIViewConteiner.addSubview(firstEntryLabel)
+        competitionsUIViewConteiner.addSubview(championshipLabel)
+        competitionsUIViewConteiner.addSubview(bestPosLabel)
         
         applyConstrains()
     }
     
     private func applyConstrains() {
+        let scrollViewConstraints = [
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
+        let scrollStackViewContainerConstraints = [
+            scrollStackViewContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollStackViewContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollStackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollStackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollStackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ]
+        // MARK: - Conteiners
+        let imageUIViewConteinerConstraints = [
+            imageUIViewConteiner.heightAnchor.constraint(equalToConstant: 250)
+        ]
+        let teamInfoUIViewConteninerConstraints = [
+            teamInfoUIViewConteniner.heightAnchor.constraint(equalToConstant: 100)
+        ]
+        let competitionsUIViewConteinerConstraints = [
+            competitionsUIViewConteiner.heightAnchor.constraint(equalToConstant: 100)
+        ]
+        // MARK: - UIElements
         let logoUIImageViewConstraints = [
-            logoUIImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            logoUIImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            logoUIImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            logoUIImageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            logoUIImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            logoUIImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            logoUIImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             logoUIImageView.heightAnchor.constraint(equalToConstant: 250)
         ]
         let nameLabelConstraints = [
-            nameLabel.topAnchor.constraint(equalTo: logoUIImageView.bottomAnchor, constant: 15),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            nameLabel.topAnchor.constraint(equalTo: imageUIViewConteiner.bottomAnchor, constant: 15),
+            nameLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
         ]
         let locationLabelConstraints = [
             locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            locationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            locationLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let presidentLabelConstraints = [
             presidentLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 10),
-            presidentLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            presidentLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let firstEntryLabelConstraints = [
             firstEntryLabel.topAnchor.constraint(equalTo: presidentLabel.bottomAnchor, constant: 10),
-            firstEntryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            firstEntryLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let championshipLabelConstraints = [
             championshipLabel.topAnchor.constraint(equalTo: firstEntryLabel.bottomAnchor, constant: 10),
-            championshipLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            championshipLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let bestPosLabelConstraints = [
             bestPosLabel.topAnchor.constraint(equalTo: championshipLabel.bottomAnchor, constant: 10),
-            bestPosLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            bestPosLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
+        
+        NSLayoutConstraint.activate(scrollViewConstraints)
+        NSLayoutConstraint.activate(scrollStackViewContainerConstraints)
+        
+        NSLayoutConstraint.activate(imageUIViewConteinerConstraints)
+        NSLayoutConstraint.activate(teamInfoUIViewConteninerConstraints)
+        NSLayoutConstraint.activate(competitionsUIViewConteinerConstraints)
+
         NSLayoutConstraint.activate(logoUIImageViewConstraints)
         NSLayoutConstraint.activate(nameLabelConstraints)
         NSLayoutConstraint.activate(locationLabelConstraints)

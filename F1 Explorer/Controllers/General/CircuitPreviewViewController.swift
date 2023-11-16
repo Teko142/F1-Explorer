@@ -10,6 +10,23 @@ import WebKit
 
 class CircuitPreviewViewController: UIViewController {
     
+    let webViewUIviewConteiner = UIView()
+    let trackInfoUIViewConteiner = UIView()
+    
+    private let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let scrollStackViewContainer: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 0
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let webView: WKWebView = {
         let webView = WKWebView()
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,52 +76,89 @@ class CircuitPreviewViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.tintColor = .label
+
+        view.addSubview(scrollView)
+        scrollView.addSubview(scrollStackViewContainer)
         
-        view.addSubview(webView)
-        view.addSubview(nameLabel)
-        view.addSubview(locationLabel)
-        view.addSubview(sinceLabel)
-        view.addSubview(dividerView)
-        view.addSubview(lenghtLabel)
+        scrollStackViewContainer.addArrangedSubview(webViewUIviewConteiner)
+        scrollStackViewContainer.addArrangedSubview(trackInfoUIViewConteiner)
+        
+        webViewUIviewConteiner.addSubview(webView)
+        trackInfoUIViewConteiner.addSubview(nameLabel)
+        trackInfoUIViewConteiner.addSubview(locationLabel)
+        trackInfoUIViewConteiner.addSubview(sinceLabel)
+        trackInfoUIViewConteiner.addSubview(lenghtLabel)
+        trackInfoUIViewConteiner.addSubview(dividerView)
         
         applyConstraints()
     }
     
     private func applyConstraints() {
+        let scrollViewConstraits = [
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
+        let scrollStackViewContainerConstraints = [
+            scrollStackViewContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollStackViewContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollStackViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollStackViewContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollStackViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ]
+        // MARK: - Conteiners
+        let webViewUIviewConteinerConstraints = [
+            webViewUIviewConteiner.heightAnchor.constraint(equalToConstant: 300)
+        ]
+        let trackInfoUIViewConteinerConstraints = [
+            trackInfoUIViewConteiner.heightAnchor.constraint(equalToConstant: 150)
+        ]
+        
         let webViewConstraints = [
-            webView.topAnchor.constraint(equalTo: view.topAnchor),
-            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            webView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            webView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             webView.heightAnchor.constraint(equalToConstant: 300)
         ]
+        // MARK: - UIElements
         let nameLabelConstraints = [
             nameLabel.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: 15),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            nameLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
         ]
         let locationLabelConstraints = [
             locationLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            locationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            locationLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let sinceLabelConstraints = [
             sinceLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 10),
-            sinceLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            sinceLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
         let lenghtLabelConstraints = [
             lenghtLabel.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 7),
-            lenghtLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+            lenghtLabel.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ]
+        
         let dividerConstraints = [
             dividerView.topAnchor.constraint(equalTo: sinceLabel.bottomAnchor, constant: 7),
-            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            dividerView.leadingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            dividerView.trailingAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             dividerView.heightAnchor.constraint(equalToConstant: 1)
         ]
+        
+        NSLayoutConstraint.activate(scrollViewConstraits)
+        NSLayoutConstraint.activate(scrollStackViewContainerConstraints)
+        
+        NSLayoutConstraint.activate(webViewUIviewConteinerConstraints)
+        NSLayoutConstraint.activate(trackInfoUIViewConteinerConstraints)
+        
         NSLayoutConstraint.activate(webViewConstraints)
         NSLayoutConstraint.activate(nameLabelConstraints)
         NSLayoutConstraint.activate(locationLabelConstraints)
         NSLayoutConstraint.activate(sinceLabelConstraints)
         NSLayoutConstraint.activate(lenghtLabelConstraints)
+        
         NSLayoutConstraint.activate(dividerConstraints)
         
     }

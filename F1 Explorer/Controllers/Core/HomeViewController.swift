@@ -10,7 +10,6 @@ import WebKit
 
 class HomeViewController: UIViewController {
     
-    private var status: Status?
     let sectionTitles: [String] = ["Circuits"]
     
     private let homeCircuitcTable:UITableView = {
