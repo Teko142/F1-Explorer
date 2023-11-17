@@ -34,7 +34,7 @@ class APICaller {
                 let result = try JSONDecoder().decode(Status.self, from: data)
                 completion(.success(result))
             } catch {
-                completion(.failure(error))
+                completion(.failure(APIError.failedToGetData))
             }
         }
         task.resume()
@@ -52,7 +52,7 @@ class APICaller {
                 let results = try JSONDecoder().decode(CircuitsResponse.self, from: data)
                 completion(.success(results.response))
             } catch {
-                completion(.failure(error))
+                completion(.failure(APIError.failedToGetData))
             }
         }
         task.resume()
@@ -70,7 +70,7 @@ class APICaller {
                 let results = try JSONDecoder().decode(TeamsResponse.self, from: data)
                 completion(.success(results.response))
             } catch {
-                completion(.failure(error))
+                completion(.failure(APIError.failedToGetData))
             }
         }
         task.resume()
@@ -89,7 +89,7 @@ class APICaller {
                 let results = try JSONDecoder().decode(DriversResponse.self, from: data)
                 completion(.success(results.response))
             } catch {
-                completion(.failure(error))
+                completion(.failure(APIError.failedToGetData))
             }
         }
         task.resume()

@@ -15,9 +15,13 @@ class DataPersistenceManager {
         case failedToSave
         case failedToFetchData
         case failedToDeleteData
+        case itemNotFound
+        case failedToUpdate
     }
     
     static let shared = DataPersistenceManager()
+    
+    // MARK: - Drivers CoreData
     
     func saveDriverWith(model: DriverDetailViewModel, completion: @escaping(Result<Void, Error>) -> Void) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
@@ -71,4 +75,67 @@ class DataPersistenceManager {
             completion(.failure(DatabaseError.failedToDeleteData))
         }
     }
+    
+    // MARK: - Reaction CoreData
+    
+    func saveReactionWith(newRactionTime: Double, completion: @escaping(Result<Void, Error>) -> Void) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let item = ReactionItem(context: context)
+        item.reactionTime = newRactionTime
+        
+        do {
+            try context.save()
+            completion(.success(()))
+        } catch {
+            completion(.failure(DatabaseError.failedToSave))
+        }
+    }
+    
+    func fetchingReactionFromDatabase(completion: @escaping (Result<ReactionItem?, Error>) -> Void) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.persistentContainer.viewContext
+
+        let request: NSFetchRequest<ReactionItem>
+        request = ReactionItem.fetchRequest()
+
+        do {
+            if let reaction = try context.fetch(request).first {
+                completion(.success(reaction))
+            } else {
+                // No reaction found
+                completion(.success(nil))
+            }
+        } catch {
+            completion(.failure(DatabaseError.failedToFetchData))
+        }
+    }
+    
+    func updateReaction(oldReactionTime: Double, newRactionTime: Double, completion: @escaping(Result<Void, Error>) -> Void) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.persistentContainer.viewContext
+        
+        do {
+            // Fetch the existing reaction item with the oldReactionTime
+            let fetchRequest: NSFetchRequest<ReactionItem> = ReactionItem.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "reactionTime == %@", NSNumber(value: oldReactionTime))
+            
+            if let existingItem = try context.fetch(fetchRequest).first {
+                // Update the existing item with the new reaction time
+                existingItem.reactionTime = newRactionTime
+                
+                // Save the context
+                try context.save()
+                completion(.success(()))
+            } else {
+                // Handle the case where the existing item is not found
+                completion(.failure(DatabaseError.itemNotFound))
+            }
+        } catch {
+            completion(.failure(DatabaseError.failedToUpdate))
+        }
+    }
+
+    
 }
