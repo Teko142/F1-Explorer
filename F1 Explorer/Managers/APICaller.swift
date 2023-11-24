@@ -7,13 +7,6 @@
 
 import Foundation
 
-struct Constants {
-    static let API_KEY = "371648ddf66da22b1395ba5151d75cff"
-    static let baseURL = "https://v1.formula-1.api-sports.io"
-    static let YouTubeAPI_KEY = "AIzaSyB6yW_gpKPrQQDhO5GLTdSxBWTgwop4TIo"
-    static let YouTubeBaseURL = "https://youtube.googleapis.com/youtube/v3/search?"
-}
-
 enum APIError: Error {
     case failedToGetData
 }
@@ -21,7 +14,7 @@ enum APIError: Error {
 class APICaller {
     
     static let shared = APICaller()
-    
+    // MARK: - F1 API
     func getStatus(completion: @escaping (Result<Status, Error>) -> Void) {
         guard let url = URL(string: "\(Constants.baseURL)/status") else { return }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
@@ -94,7 +87,7 @@ class APICaller {
         }
         task.resume()
     }
-    
+    // MARK: - YouTube API
     func getVideo(with query: String, completion: @escaping (Result<VideoElement, Error>) -> Void) {
         guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
         guard let url = URL(string: "\(Constants.YouTubeBaseURL)q=\(query)&key=\(Constants.YouTubeAPI_KEY)") else { return }
@@ -106,6 +99,23 @@ class APICaller {
                 completion(.success(results.items[0]))
             } catch {
                 completion(.failure(error))
+                print(error.localizedDescription)
+            }
+        }
+        task.resume()
+    }
+    //MARK: - Translation API
+    func getTranslate(with query: String, completion: @escaping (Result<Translation, Error>) -> Void) {
+        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
+        guard let url = URL(string: "\(Constants.TranslateURL)q=\(query)&target=en&key=\(Constants.TranslateAPI_KEY)") else { return }
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0)
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data = data, error == nil else { return }
+            do {
+                let results = try JSONDecoder().decode(TranslationResponse.self, from: data)
+                completion(.success(results.data.translations[0]))
+            } catch {
+                completion(.failure(APIError.failedToGetData))
                 print(error.localizedDescription)
             }
         }
