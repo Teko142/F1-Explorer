@@ -84,6 +84,7 @@ class DataPersistenceManager {
         
         let item = ReactionItem(context: context)
         item.reactionTime = newRactionTime
+        item.id = 1
         
         do {
             try context.save()
@@ -117,25 +118,20 @@ class DataPersistenceManager {
         let context = appDelegate.persistentContainer.viewContext
         
         do {
-            // Fetch the existing reaction item with the oldReactionTime
             let fetchRequest: NSFetchRequest<ReactionItem> = ReactionItem.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "reactionTime == %@", NSNumber(value: oldReactionTime))
+            fetchRequest.predicate = NSPredicate(format: "id == %@", NSNumber(value: 1))
             
-            if let existingItem = try context.fetch(fetchRequest).first {
-                // Update the existing item with the new reaction time
-                existingItem.reactionTime = newRactionTime
-                
-                // Save the context
-                try context.save()
-                completion(.success(()))
-            } else {
-                // Handle the case where the existing item is not found
-                completion(.failure(DatabaseError.itemNotFound))
+            do {
+                let data = try context.fetch(fetchRequest)
+                if data.count == 1 {
+                    let objectUpdate = data[0] as NSManagedObject
+                    objectUpdate.setValue(newRactionTime, forKey: "reactionTime")
+                    appDelegate.saveContext()
+                    completion(.success(()))
+                }
+            } catch {
+                completion(.failure(DatabaseError.failedToUpdate))
             }
-        } catch {
-            completion(.failure(DatabaseError.failedToUpdate))
         }
     }
-
-    
 }

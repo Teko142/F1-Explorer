@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 
-struct UserRecord {
+struct UserRecord: Identifiable, Codable {
+    @DocumentID var id: String? = UUID().uuidString
     var location: String
     var record: Double
 }

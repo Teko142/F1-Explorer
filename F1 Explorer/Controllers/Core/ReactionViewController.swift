@@ -8,6 +8,7 @@
 import UIKit
 import CoreLocation
 import FirebaseFirestore
+import FirebaseAuth
 
 enum UIConditions {
     case waiting
@@ -26,8 +27,11 @@ class ReactionViewController: UIViewController {
     var timer = Timer()
     var timerCount: Double = 0.000
     var bestResult: Double = 0
-    var country: String?
+    var country: String = "World"
     var userID: String?
+    var finalResult: Double = 0
+    
+    var usersRecords = [UserRecord]()
     
     let locationManager = CLLocationManager()
     let db = Firestore.firestore()
@@ -84,6 +88,16 @@ class ReactionViewController: UIViewController {
         return button
     }()
     
+    private let bestLocalResult: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .label
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.text = "Best result is: 0.00"
+        label.textAlignment = .center
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -95,6 +109,9 @@ class ReactionViewController: UIViewController {
         view.addSubview(bestResultLabel)
         view.addSubview(loginButton)
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .done, target: self, action: #selector(logoutTapped))
+        navigationItem.rightBarButtonItem?.isHidden = true
+
         applyConstrains()
         fetchLocalStorageForSaves()
         
@@ -172,7 +189,7 @@ class ReactionViewController: UIViewController {
             let lastPause = TimeInterval(arc4random_uniform(3000)) / 1000
             DispatchQueue.main.asyncAfter(deadline: .now() + 5 + lastPause) {
                 guard self.uiConditions != .jumpStart else { return }
-                if e == true && a == false && b == false && c == false && d == false{
+                if e == true && a == false && b == false && c == false && d == false {
                     self.lightsUIImageView.image = UIImage(named: "StartLightsEmpty")
                     self.timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { timer in
                         guard self.uiConditions != .jumpStart else {
@@ -195,9 +212,17 @@ class ReactionViewController: UIViewController {
             if timerCount > 0 && bestResult > timerCount {
                 updateReaction()
                 fetchLocalStorageForSaves()
+                if userID != nil {
+                    updateUserData()
+                    showBestLocalResult()
+                }
             } else if bestResult == 0 {
                 saveReaction()
                 fetchLocalStorageForSaves()
+                if userID != nil {
+                    updateUserData()
+                    showBestLocalResult()
+                }
             }
         }
     }
@@ -210,11 +235,33 @@ class ReactionViewController: UIViewController {
         rootVC.userIDUpdateHandler = { [weak self] userID in
             self?.userID = userID
             self?.updateUserData()
+            self?.showBestLocalResult()
+            self?.view.addSubview(self!.bestLocalResult)
+            self?.loginButton.removeFromSuperview()
+            self?.deactivateAllConstraints()
+            self?.applyConstrains()
+            self?.navigationItem.rightBarButtonItem?.isHidden = false
         }
         
         present(navVC, animated: true)
     }
     
+    @objc private func logoutTapped() {
+        do {
+            try Auth.auth().signOut()
+            userID = nil
+            view.addSubview(loginButton)
+            bestLocalResult.removeFromSuperview()
+            navigationItem.rightBarButtonItem?.isHidden = true
+            deactivateAllConstraints()
+            applyConstrains()
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    // MARK: - Operations With Location
     func getLocation() {
         self.locationManager.requestAlwaysAuthorization()
         
@@ -229,22 +276,41 @@ class ReactionViewController: UIViewController {
             }
         }
     }
-    
+    // MARK: - Operations With Firstore
     func updateUserData() {
         if userID != nil && bestResult > 0 {
             let docRef = db.collection("users").document(userID!)
             docRef.getDocument { (document, error) in
                 if let document = document, document.exists {
                     if let userData = document.data().flatMap({ UserRecord(location: $0["location"] as? String ?? "world", record: $0["record"] as? Double ?? 0.0) }) {
-                        
+                        if self.bestResult < userData.record {
+                            docRef.updateData(["location" : self.country, "record": self.bestResult])
+                        }
                     }
                 } else {
-                    // If no records yet
                     self.db.collection("users").document(self.userID!).setData([
-                        "location": self.country ?? "world",
+                        "location": self.country,
                         "record": self.bestResult
                     ])
                 }
+            }
+        }
+    }
+    
+    func showBestLocalResult() {
+        // Fetch all data
+        db.collection("users").addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {return}
+            self.usersRecords = documents.compactMap {(queryDocumentSnapshot) -> UserRecord? in
+                return try? queryDocumentSnapshot.data(as: UserRecord.self)
+            }
+            print(self.country)
+            self.usersRecords = self.usersRecords.filter{$0.location == self.country}
+            if let minRecord = self.usersRecords.min(by: { $0.record < $1.record }) {
+                self.bestLocalResult.text = "Best result in \(self.country) is: \(minRecord.record)"
+                print(minRecord.record)
+            } else {
+                print("No records found")
             }
         }
     }
@@ -294,13 +360,14 @@ class ReactionViewController: UIViewController {
     var resultLabelConstraintsNarrow: [NSLayoutConstraint] = []
     var bestResultLabelConstraintsNarrow: [NSLayoutConstraint] = []
     var loginButtonConstraintsNarrow: [NSLayoutConstraint] = []
+    var bestLocalResultConstraintsNarrow: [NSLayoutConstraint] = []
     
     var lightsUIImageViewConstraintsWide: [NSLayoutConstraint] = []
     var rulesLabelConstraintsWide: [NSLayoutConstraint] = []
     var resultLabelConstraintsWide: [NSLayoutConstraint] = []
     var bestResultLabelConstraintsWide: [NSLayoutConstraint] = []
     var loginButtonConstraintsWide: [NSLayoutConstraint] = []
-    
+    var bestLocalResultConstraintsWide: [NSLayoutConstraint] = []
     
     private func applyConstrains(){
         // MARK: - Narrow Constraints
@@ -325,6 +392,10 @@ class ReactionViewController: UIViewController {
         loginButtonConstraintsNarrow = [
             loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ]
+        bestLocalResultConstraintsNarrow = [
+            bestLocalResult.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            bestLocalResult.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ]
         // MARK: - Wide Constraints
         lightsUIImageViewConstraintsWide = [
@@ -352,19 +423,57 @@ class ReactionViewController: UIViewController {
             loginButton.leadingAnchor.constraint(equalTo: lightsUIImageView.trailingAnchor),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ]
+        bestLocalResultConstraintsWide = [
+            bestLocalResult.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            bestLocalResult.leadingAnchor.constraint(equalTo: lightsUIImageView.trailingAnchor),
+            bestLocalResult.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ]
         
         if view.frame.width > view.frame.height {
             NSLayoutConstraint.activate(lightsUIImageViewConstraintsWide)
             NSLayoutConstraint.activate(rulesLabelConstraintsWide)
             NSLayoutConstraint.activate(resultLabelConstraintsWide)
-            NSLayoutConstraint.activate(bestResultLabelConstraintsWide)
-            NSLayoutConstraint.activate(loginButtonConstraintsWide)
+            if userID != nil {
+                bestResultLabelConstraintsWide = [
+                    bestResultLabel.bottomAnchor.constraint(equalTo: bestLocalResult.topAnchor),
+                    bestResultLabel.leadingAnchor.constraint(equalTo: lightsUIImageView.trailingAnchor),
+                    bestResultLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                ]
+                NSLayoutConstraint.deactivate(loginButtonConstraintsWide)
+                NSLayoutConstraint.activate(bestLocalResultConstraintsWide)
+                NSLayoutConstraint.activate(bestResultLabelConstraintsWide)
+            } else {
+                bestResultLabelConstraintsWide = [
+                    bestResultLabel.bottomAnchor.constraint(equalTo: loginButton.topAnchor),
+                    bestResultLabel.leadingAnchor.constraint(equalTo: lightsUIImageView.trailingAnchor),
+                    bestResultLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                ]
+                NSLayoutConstraint.deactivate(bestLocalResultConstraintsWide)
+                NSLayoutConstraint.activate(loginButtonConstraintsWide)
+                NSLayoutConstraint.activate(bestResultLabelConstraintsWide)
+            }
         } else {
             NSLayoutConstraint.activate(lightsUIImageViewConstraintsNarrow)
             NSLayoutConstraint.activate(rulesLabelConstraintsNarrow)
             NSLayoutConstraint.activate(resultLabelConstraintsNarrow)
-            NSLayoutConstraint.activate(bestResultLabelConstraintsNarrow)
-            NSLayoutConstraint.activate(loginButtonConstraintsNarrow)
+            if userID != nil {
+                bestResultLabelConstraintsNarrow = [
+                    bestResultLabel.bottomAnchor.constraint(equalTo: bestLocalResult.topAnchor),
+                    bestResultLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+                ]
+                NSLayoutConstraint.deactivate(loginButtonConstraintsNarrow)
+                NSLayoutConstraint.activate(bestLocalResultConstraintsNarrow)
+                NSLayoutConstraint.activate(bestResultLabelConstraintsNarrow)
+            } else {
+                bestResultLabelConstraintsNarrow = [
+                    bestResultLabel.bottomAnchor.constraint(equalTo: loginButton.topAnchor),
+                    bestResultLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+                ]
+                NSLayoutConstraint.deactivate(bestLocalResultConstraintsNarrow)
+                NSLayoutConstraint.activate(loginButtonConstraintsNarrow)
+                NSLayoutConstraint.activate(bestResultLabelConstraintsNarrow)
+                
+            }
         }
     }
     
@@ -376,30 +485,76 @@ class ReactionViewController: UIViewController {
                 NSLayoutConstraint.deactivate(self.rulesLabelConstraintsNarrow)
                 NSLayoutConstraint.deactivate(self.resultLabelConstraintsNarrow)
                 NSLayoutConstraint.deactivate(self.bestResultLabelConstraintsNarrow)
+                NSLayoutConstraint.deactivate(self.bestLocalResultConstraintsNarrow)
                 NSLayoutConstraint.deactivate(self.loginButtonConstraintsNarrow)
-                
                 
                 NSLayoutConstraint.activate(self.lightsUIImageViewConstraintsWide)
                 NSLayoutConstraint.activate(self.rulesLabelConstraintsWide)
                 NSLayoutConstraint.activate(self.resultLabelConstraintsWide)
-                NSLayoutConstraint.activate(self.bestResultLabelConstraintsWide)
-                NSLayoutConstraint.activate(self.loginButtonConstraintsWide)
+                
+                if self.userID != nil {
+                    self.bestResultLabelConstraintsWide = [
+                        self.bestResultLabel.bottomAnchor.constraint(equalTo: self.bestLocalResult.topAnchor),
+                        self.bestResultLabel.leadingAnchor.constraint(equalTo: self.lightsUIImageView.trailingAnchor),
+                        self.bestResultLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+                    ]
+                    NSLayoutConstraint.activate(self.bestLocalResultConstraintsWide)
+                    NSLayoutConstraint.activate(self.bestResultLabelConstraintsWide)
+                } else {
+                    self.bestResultLabelConstraintsWide = [
+                        self.bestResultLabel.bottomAnchor.constraint(equalTo: self.loginButton.topAnchor),
+                        self.bestResultLabel.leadingAnchor.constraint(equalTo: self.lightsUIImageView.trailingAnchor),
+                        self.bestResultLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+                    ]
+                    NSLayoutConstraint.activate(self.loginButtonConstraintsWide)
+                    NSLayoutConstraint.activate(self.bestResultLabelConstraintsWide)
+                }
             } else {
                 NSLayoutConstraint.deactivate(self.lightsUIImageViewConstraintsWide)
                 NSLayoutConstraint.deactivate(self.rulesLabelConstraintsWide)
                 NSLayoutConstraint.deactivate(self.resultLabelConstraintsWide)
                 NSLayoutConstraint.deactivate(self.bestResultLabelConstraintsWide)
+                NSLayoutConstraint.deactivate(self.bestLocalResultConstraintsWide)
                 NSLayoutConstraint.deactivate(self.loginButtonConstraintsWide)
                 
                 NSLayoutConstraint.activate(self.lightsUIImageViewConstraintsNarrow)
                 NSLayoutConstraint.activate(self.rulesLabelConstraintsNarrow)
                 NSLayoutConstraint.activate(self.resultLabelConstraintsNarrow)
-                NSLayoutConstraint.activate(self.bestResultLabelConstraintsNarrow)
-                NSLayoutConstraint.activate(self.loginButtonConstraintsNarrow)
+                if self.userID != nil {
+                    self.bestResultLabelConstraintsNarrow = [
+                        self.bestResultLabel.bottomAnchor.constraint(equalTo: self.bestLocalResult.topAnchor),
+                        self.bestResultLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+                    ]
+                    NSLayoutConstraint.activate(self.bestLocalResultConstraintsNarrow)
+                    NSLayoutConstraint.activate(self.bestResultLabelConstraintsNarrow)
+                } else {
+                    self.bestResultLabelConstraintsNarrow = [
+                        self.bestResultLabel.bottomAnchor.constraint(equalTo: self.loginButton.topAnchor),
+                        self.bestResultLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+                    ]
+                    NSLayoutConstraint.activate(self.loginButtonConstraintsNarrow)
+                    NSLayoutConstraint.activate(self.bestResultLabelConstraintsNarrow)
+                    
+                }
             }
         }
     }
     
+    private func deactivateAllConstraints() {
+        NSLayoutConstraint.deactivate(self.lightsUIImageViewConstraintsNarrow)
+        NSLayoutConstraint.deactivate(self.rulesLabelConstraintsNarrow)
+        NSLayoutConstraint.deactivate(self.resultLabelConstraintsNarrow)
+        NSLayoutConstraint.deactivate(self.bestResultLabelConstraintsNarrow)
+        NSLayoutConstraint.deactivate(self.bestLocalResultConstraintsNarrow)
+        NSLayoutConstraint.deactivate(self.loginButtonConstraintsNarrow)
+        
+        NSLayoutConstraint.deactivate(self.lightsUIImageViewConstraintsWide)
+        NSLayoutConstraint.deactivate(self.rulesLabelConstraintsWide)
+        NSLayoutConstraint.deactivate(self.resultLabelConstraintsWide)
+        NSLayoutConstraint.deactivate(self.bestResultLabelConstraintsWide)
+        NSLayoutConstraint.deactivate(self.bestLocalResultConstraintsWide)
+        NSLayoutConstraint.deactivate(self.loginButtonConstraintsWide)
+    }
 }
 // MARK: - CLLocation
 extension ReactionViewController: CLLocationManagerDelegate {
@@ -407,8 +562,16 @@ extension ReactionViewController: CLLocationManagerDelegate {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         let location = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
         location.fetchCityAndCountry { country, error in
-            self.country = country
+            APICaller.shared.getTranslate(with: country ?? "World") { result in
+                switch result {
+                case .success(let translation):
+                    self.country = translation.translatedText
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
         }
+        manager.startUpdatingLocation()
     }
 }
 
