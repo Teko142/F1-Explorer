@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A15DC242B1E72DE00AEFDC3 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A15DC232B1E72DE00AEFDC3 /* FooterView.swift */; };
 		1A209F942B0C6021006FA130 /* UserRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A209F932B0C6021006FA130 /* UserRecord.swift */; };
 		1A4A75072AFAEDD300E6DD71 /* TeamDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A75062AFAEDD300E6DD71 /* TeamDetailViewController.swift */; };
 		1A4A750E2AFD17E700E6DD71 /* DataPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A750D2AFD17E700E6DD71 /* DataPersistenceManager.swift */; };
@@ -80,6 +81,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A15DC232B1E72DE00AEFDC3 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		1A209F932B0C6021006FA130 /* UserRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecord.swift; sourceTree = "<group>"; };
 		1A4A75062AFAEDD300E6DD71 /* TeamDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamDetailViewController.swift; sourceTree = "<group>"; };
 		1A4A750D2AFD17E700E6DD71 /* DataPersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPersistenceManager.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				1A7B7BAE2AEF309A0015117A /* CircuitsCollectionViewCell.swift */,
 				1A709C6E2AF0AB7E001FDBA3 /* TeamTableViewCell.swift */,
 				1A54F4682AF2D2AB00CC7844 /* DriverTableViewCell.swift */,
+				1A15DC232B1E72DE00AEFDC3 /* FooterView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 				1AEA6CAA2AE9D4B0001CBF81 /* APICaller.swift in Sources */,
 				1AEA6CA32AE9CFE3001CBF81 /* DriversSearchViewController.swift in Sources */,
 				1A209F942B0C6021006FA130 /* UserRecord.swift in Sources */,
+				1A15DC242B1E72DE00AEFDC3 /* FooterView.swift in Sources */,
 				1A4A750E2AFD17E700E6DD71 /* DataPersistenceManager.swift in Sources */,
 				1AEA6CA72AE9D006001CBF81 /* ReactionViewController.swift in Sources */,
 				1A54F4692AF2D2AB00CC7844 /* DriverTableViewCell.swift in Sources */,

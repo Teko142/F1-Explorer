@@ -33,11 +33,25 @@ class HomeViewController: UIViewController {
         
         let headerView = VideoHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 200))
         homeCircuitcTable.tableHeaderView = headerView
+        let footerView = FooterView(text: "v1.0.0")
+        homeCircuitcTable.tableFooterView = asd
+        homeCircuitcTable.tableFooterView = footerView
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         homeCircuitcTable.frame = view.bounds
+        
+        guard let footerView = self.homeCircuitcTable.tableFooterView else {
+            return
+          }
+          let width = self.homeCircuitcTable.bounds.size.width
+          let size = footerView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height))
+          if footerView.frame.size.height != size.height {
+            footerView.frame.size.height = size.height
+            self.homeCircuitcTable.tableFooterView = footerView
+          }
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -46,6 +60,10 @@ class HomeViewController: UIViewController {
     }
     
     private func configureNavBar() {
+        title = "Home"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.tintColor = .label
         var image = UIImage(named: "F1")
         image = image?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
