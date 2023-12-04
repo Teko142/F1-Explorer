@@ -304,13 +304,11 @@ class ReactionViewController: UIViewController {
             self.usersRecords = documents.compactMap {(queryDocumentSnapshot) -> UserRecord? in
                 return try? queryDocumentSnapshot.data(as: UserRecord.self)
             }
-            print(self.country)
             self.usersRecords = self.usersRecords.filter{$0.location == self.country}
             if let minRecord = self.usersRecords.min(by: { $0.record < $1.record }) {
                 self.bestLocalResult.text = "Best result in \(self.country) is: \(minRecord.record)"
-                print(minRecord.record)
             } else {
-                print("No records found")
+                self.bestLocalResult.text = "Best result in \(self.country) is: 0.00"
             }
         }
     }
@@ -571,7 +569,7 @@ extension ReactionViewController: CLLocationManagerDelegate {
                 }
             }
         }
-        manager.startUpdatingLocation()
+        manager.stopUpdatingLocation()
     }
 }
 
