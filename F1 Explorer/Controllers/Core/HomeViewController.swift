@@ -34,7 +34,6 @@ class HomeViewController: UIViewController {
         let headerView = VideoHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 200))
         homeCircuitcTable.tableHeaderView = headerView
         let footerView = FooterView(text: "v1.0.0")
-        homeCircuitcTable.tableFooterView = asd
         homeCircuitcTable.tableFooterView = footerView
     }
     
