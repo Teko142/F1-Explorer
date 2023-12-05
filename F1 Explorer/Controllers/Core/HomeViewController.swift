@@ -11,6 +11,7 @@ import WebKit
 class HomeViewController: UIViewController {
     
     let sectionTitles: [String] = ["Circuits"]
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
     private let homeCircuitcTable:UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
@@ -33,7 +34,7 @@ class HomeViewController: UIViewController {
         
         let headerView = VideoHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 200))
         homeCircuitcTable.tableHeaderView = headerView
-        let footerView = FooterView(text: "v1.0.0")
+        let footerView = FooterView(text: "v\(appVersion!)")
         homeCircuitcTable.tableFooterView = footerView
     }
     
